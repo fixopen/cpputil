@@ -16,11 +16,12 @@ namespace Util {
         WIN32_FIND_DATA findFileData;
         auto hFind = ::FindFirstFile(findFilename.c_str(), &findFileData);
         if (hFind == INVALID_HANDLE_VALUE) {
-            printf("not find file\n");
+            //not find file.
         } else {
             bool finished = false;
             do {
-                if (findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) { //is directory, recursive
+                if ((findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) //is directory, recursive
+                    && ((wcscmp(findFileData.cFileName, L".") == 0) || (wcscmp(findFileData.cFileName, L"..") == 0)) {
                     auto origDir = fileproc.directoryName_;
                     fileproc.directoryName_ += std::wstring(L"/") + findFileData.cFileName;
                     ProcessFiles(pattern, fileproc);
